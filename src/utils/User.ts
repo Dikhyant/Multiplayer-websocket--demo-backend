@@ -7,6 +7,7 @@ export class User{
     constructor(ws: WebSocket.WebSocket) {
         this.character = new UserCharacter();
         this.webSocket = ws;
+        this.uid = "";
     }
 
     public getWebSocket(): WebSocket.WebSocket {
@@ -19,4 +20,5 @@ export class User{
 
     private webSocket: WebSocket.WebSocket
     private character: UserCharacter;
+    public uid: string;
 }

@@ -1,5 +1,5 @@
-import { EMoveDirection, IMessageToServer, ITransform } from "../interfaces/NetworkInterfaces";
-import { User } from "../utils/User";
+import { EMessageCode, EMoveDirection, IMessageFromServerToClientPositionSync, IMessageToServer, ITransform } from "../interfaces/NetworkInterfaces";
+import { User, Users } from "../utils/User";
 import { UserCharacter } from "../utils/UserCharacter";
 
 export function HandleUserMessage( user: User, message: IMessageToServer){
@@ -35,5 +35,17 @@ export function HandleUserMessage( user: User, message: IMessageToServer){
         eulerRotation: character.getEulerRotation()
     }
 
-    user.getWebSocket().send(JSON.stringify(newTransform));
+    const messageForClient: IMessageFromServerToClientPositionSync = {
+        code: EMessageCode.MOVEMENT,
+        users: [{
+            uid: user.uid,
+            transform: newTransform
+        }]
+    }
+
+    for(let i = 0; i < Users.length; i++) {
+        Users[i].getWebSocket().send(JSON.stringify(messageForClient));
+    }
+
+    //user.getWebSocket().send(JSON.stringify(messageForClient));
 }
